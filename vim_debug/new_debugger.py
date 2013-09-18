@@ -102,7 +102,15 @@ class Debugger:
         return self.start()
 
     def start_py(self, fname):
-        subprocess.Popen(('pydbgp.py', '-d', 'localhost:9000', fname), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        #chliu fixed for windows!2013/6/6 11:34:34
+        si = subprocess.STARTUPINFO()
+        si.dwFlags = subprocess.STARTF_USESHOWWINDOW
+        si.wShowWindow = subprocess.SW_HIDE
+
+        self._proc = subprocess.Popen(
+            ('C:\\Python27\\python.exe', 'C:\\Python27\\Scripts\\pydbgp.py', '-d', 'localhost:9000', fname),
+            startupinfo=si, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        #subprocess.Popen(('pydbgp.py', '-d', 'localhost:9000', fname), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         self._type = 'python'
         return self.start()
 
@@ -174,6 +182,9 @@ class Debugger:
     def quit(self):
         self.bend.close()
         self.ui.close()
+        #chliu fixed 2013/6/6 13:01:03
+        #for windows
+        self._proc.terminate()
         vim_quit()
 
     @cmd('up', help='go up the stack', lead='u')

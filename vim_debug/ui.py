@@ -23,7 +23,9 @@ class DebugUI:
         self.waiting  = {}
         self.toremove = {}
         self.cursign  = None
-        self.sessfile = "/tmp/debugger_vim_saved_session." + str(os.getpid())
+        #chliu fixed 2013/6/6 11:52:52
+        #support run in windows !
+        self.sessfile = "~/.vim/tmp/debugger_vim_saved_session." + str(os.getpid())
         self.minibufexpl = minibufexpl
 
     def startup(self):
@@ -168,7 +170,7 @@ class DebugUI:
         if file.startswith('file:'):
             file = file[len('file:'):]
             if file.startswith('///'):
-                file = file[2:]
+                file = file[3:] #chliu fixed 2013/6/6 12:22:59 for windows
 
         if file == self.file and self.line == line:
             return
